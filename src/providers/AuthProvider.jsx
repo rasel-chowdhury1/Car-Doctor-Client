@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWith
 
 
 export const AuthContext = createContext();
-const auth = getAuth(app)
+export const auth = getAuth(app)
 
 const AuthProvider = ({children}) => {
 
