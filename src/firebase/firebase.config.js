@@ -13,6 +13,13 @@ const firebaseConfig = {
   appId: "1:572458497563:web:665ee07a9437f573646abe"
 };
 
+console.log(process.env.VITE_authDomain)
+console.log(process.env.VITE_projectId)
+console.log(process.env.VITE_storageBucket)
+console.log(process.env.VITE_messagingSenderId)
+console.log(process.env.VITE_apiKey)
+console.log(process.env.VITE_appId)
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 

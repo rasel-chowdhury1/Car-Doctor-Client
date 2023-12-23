@@ -1,8 +1,8 @@
 import React from 'react';
 
-const BookingCard = ({booking,handleDeleteButton}) => {
+const BookingCard = ({booking, handleDeleteButton, handleConfirmButton}) => {
     console.log(booking)
-    const {_id,Service,Photo,Price,Date,Email} = booking;
+    const {_id,Service,Photo,Price,Date,Email,status} = booking;
     console.log(handleDeleteButton);
 
     return (
@@ -32,7 +32,11 @@ const BookingCard = ({booking,handleDeleteButton}) => {
             </td>
             <td>{Date}</td>
             <th>
-            <button className="btn btn-ghost btn-xs">details</button>
+              {
+                status === 'confirm'? 
+                 <span className="font-bold text-primary">Confirmed</span>
+                 :<button onClick={() => handleConfirmButton(_id)} className="btn btn-ghost btn-xs">Please Confirm</button>
+              }
             </th>
         </tr>
     );

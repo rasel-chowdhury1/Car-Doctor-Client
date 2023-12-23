@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../providers/AuthProvider';
+import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 
 const Signup = () => {
 
     const {createUser} = useContext(AuthContext)
+    const navigate = useNavigate();
 
     const handleSignUPButton = event =>{
         event.preventDefault();
@@ -20,6 +22,8 @@ const Signup = () => {
         .then(result =>{
             const user = result.user;
             console.log(user)
+            navigate('/');
+
         })
         .catch(error => {
             console.log(error)
@@ -59,6 +63,7 @@ const Signup = () => {
                        <input type="submit" value="SIGN UP" className="btn btn-primary" />
                     </div>
                 </form>
+                <SocialLogin></SocialLogin>
                 <p className='my-4 text-center'>Already Have an Account? <Link to='/login' className='text-orange-600 font-bold'>Login</Link></p>
                 </div>
 

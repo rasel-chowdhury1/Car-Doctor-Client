@@ -2,23 +2,35 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../providers/AuthProvider';
 import BookingCard from './BookingCard';
 import Swal from 'sweetalert2';
+import { json, useNavigate } from 'react-router-dom';
 
 // import BookingCard from './BookingCard';
 
 const Bookings = () => {
     const [bookings,setBooking] = useState([]);
     const {user,loading} = useContext(AuthContext);
+    const navigate = useNavigate();
     console.log(user.email)
     
-    const uri = `http://localhost:3000/booking?Email=${user.email}`
+       const url = `http://localhost:3000/booking?Email=${user.email}`
         useEffect(() =>{
-            fetch(uri)
+            fetch(url, {
+                method: 'GET',
+                headers:{
+                    authorization: `Bearer ${localStorage.getItem('car-doctor-access-token')}`
+                },
+            })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data);
-                    setBooking(data);
+                    if(!data.error){
+                        setBooking(data);
+                    }
+                    else{
+                        // logout and then navigate
+                        navigate('/')
+                    }
                 })
-        },[])
+        },[url,navigate])
 
         const handleDeleteButton = id =>{
             console.log('service id : ',id)
@@ -55,6 +67,30 @@ const Bookings = () => {
               });
         }
 
+        const handleConfirmButton = id =>{
+            fetch(`http://localhost:3000/bookings/${id}`,{
+                method: "PATCH",
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    status: 'confirm'
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if(data.modifiedCount > 0){
+                    //update state
+                    const remaining = bookings.filter(booking => booking._id !== id);
+                    const updated = bookings.find(booking => booking._id === id);
+                    updated.status = 'confirm'
+                    const newBookings = [...remaining,updated];
+                    setBooking(newBookings);
+                }
+            })
+        }
+
 
     return (
         <div>
@@ -83,6 +119,7 @@ const Bookings = () => {
                           key={booking._id}
                           booking = {booking}
                           handleDeleteButton={handleDeleteButton}
+                          handleConfirmButton={handleConfirmButton}
                         ></BookingCard>)}
                     </tbody>
                 </table>
